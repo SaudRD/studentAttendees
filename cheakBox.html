@@ -1,0 +1,150 @@
+<html>
+    <head>
+        <title>Cheak box voice</title>   
+
+        <style>
+        #btnGiveCommand
+        {
+            padding: 1em;
+            background-color:MediumSeaGreen;
+            color:cornsilk;
+            font-weight: 100px;
+            border-radius:2em;
+            font-size: 20px;
+            margin: 0 auto;
+            margin-left: -8% ;
+            margin-right: 50% ;
+            margin-top: 10%;
+            outline: none;
+
+        }
+        label
+        {
+            font-size: 20px;
+            color:seagreen;
+
+        }
+        .k
+        {
+            position: relative;
+            margin: 0 auto;
+            margin-left: 47% ;
+            margin-right: 0 ;
+            margin-top: 10%;
+        }
+        input[type=checkbox] + label {
+            display: block;
+            margin: 0.2em;
+            cursor: pointer;
+            padding: 0.2em;
+            }
+
+input[type=checkbox] {
+  display: none;
+}
+
+input[type=checkbox] + label:before {
+  content: "\2714";
+  border: 0.1em solid #000;
+  border-radius: 0.2em;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  padding-left: 0.2em;
+  padding-bottom: 0.3em;
+  margin-right: 0.2em;
+  vertical-align: bottom;
+  color: transparent;
+  transition: .2s;
+}
+
+input[type=checkbox] + label:active:before {
+  transform: scale(0);
+}
+
+input[type=checkbox]:checked + label:before {
+  background-color: MediumSeaGreen;
+  border-color: MediumSeaGreen;
+  color: #fff;
+}
+
+input[type=checkbox]:disabled + label:before {
+  transform: scale(1);
+  border-color: #aaa;
+}
+
+
+        </style>
+    </head>
+    <body>
+        <div class="k">
+                <button id='btnGiveCommand'><b>قول الاسم المراد وضع صح عليه</b></button>
+                <br><br>
+                <span id='message'></span>
+                <br><br>
+                <input id='chkSteve' type="checkbox">                 <label for="fruit1">سعود</label>
+
+                <br>
+
+                <input id='chkTony' type="checkbox">                 <label for="fruit1">محمد</label>
+
+                <br>
+                <input id='chkBruce' type="checkbox">                 <label for="fruit1">مصلح</label>
+
+                <br>
+                <input id='chkNick' type="checkbox">                 <label for="fruit1">طارق</label>
+
+        </div>
+        <script>
+            var message = document.querySelector('#message');
+            var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+            var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+            var grammar = '#JSGF V1.0;'
+            var recognition = new SpeechRecognition();
+            var speechRecognitionList = new SpeechGrammarList();
+            speechRecognitionList.addFromString(grammar, 1);
+            recognition.grammars = speechRecognitionList;
+            recognition.lang = 'ar-SA';
+            recognition.interimResults = true;
+            recognition.continuous = false;
+            recognition.onresult = function(event) {
+                var last = event.results.length - 1;
+                var command = event.results[last][0].transcript;
+                message.textContent = 'الكلمة المذكورة هي: ' + command + '.';
+                if(command.toLowerCase() === 'سعود'){
+                    document.querySelector('#chkSteve').checked = true;
+                }
+                else if (command.toLowerCase() === 'محمد'){
+                    document.querySelector('#chkTony').checked = true;
+                }
+                else if (command.toLowerCase() === 'مصلح'){
+                    document.querySelector('#chkBruce').checked = true;
+                }
+                else if (command.toLowerCase() === 'طارق'){
+                    document.querySelector('#chkNick').checked = true;
+                }
+                if(command.toLowerCase() === 'احذف سعود'){
+                    document.querySelector('#chkSteve').checked = false;
+                }
+                else if (command.toLowerCase() === 'احذف محمد'){
+                    document.querySelector('#chkTony').checked = false;
+                }
+                else if (command.toLowerCase() === 'احذف مصلح'){
+                    document.querySelector('#chkBruce').checked = false;
+                }
+                else if (command.toLowerCase() === 'احذف طارق'){
+                    document.querySelector('#chkNick').checked = false;
+                }      
+            };
+            recognition.onspeechend = function() {
+                recognition.stop();
+            };
+            recognition.onerror = function(event) {
+                message.textContent = 'Error occurred in recognition: ' + event.error;
+            }        
+            document.querySelector('#btnGiveCommand').addEventListener('click', function(){
+                recognition.start();
+            });
+        </script>
+    </body>
+</html>
